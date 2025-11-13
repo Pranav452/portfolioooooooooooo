@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
 
 export const useKonamiCode = (callback: () => void) => {
-  const [keys, setKeys] = useState<string[]>([]);
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
   useEffect(() => {
+    let keys: string[] = [];
+    
     const handleKeyDown = (e: KeyboardEvent) => {
-      setKeys((prevKeys) => {
-        const newKeys = [...prevKeys, e.key].slice(-10);
-        
-        if (JSON.stringify(newKeys) === JSON.stringify(konamiCode)) {
-          callback();
-          return [];
-        }
-        
-        return newKeys;
-      });
+      keys = [...keys, e.key].slice(-10);
+      
+      if (JSON.stringify(keys) === JSON.stringify(konamiCode)) {
+        callback();
+        keys = [];
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);

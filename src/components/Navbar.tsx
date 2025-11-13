@@ -9,7 +9,6 @@ Modal.setAppElement("#root");
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [appleClicks, setAppleClicks] = useState(0);
   const [modalMessage, setModalMessage] = useState("Seriously, you thought it was real? It doesn't exist yet.");
 
   useKonamiCode(() => {
@@ -38,25 +37,26 @@ export default function Navbar() {
   };
 
   const handleAppleClick = () => {
-    setAppleClicks((prev) => {
-      const newCount = prev + 1;
-      if (newCount === 5) {
+    let clickCount = 0;
+    return () => {
+      clickCount++;
+      if (clickCount === 5) {
         setModalMessage(`🍎 ${getRandomFunnyMessage()}`);
         setIsModalOpen(true);
-        return 0;
+        clickCount = 0;
       }
-      return newCount;
-    });
-    
-    setTimeout(() => setAppleClicks(0), 2000);
+      setTimeout(() => { clickCount = 0; }, 2000);
+    };
   };
+
+  const appleClickHandler = handleAppleClick();
 
   return (
     <>
       <nav>
         <div>
           <ul>
-            <li className='apple' onClick={handleAppleClick} style={{ cursor: 'pointer' }} title="Click me 5 times fast!">
+            <li className='apple' onClick={appleClickHandler} style={{ cursor: 'pointer' }} title="Click me 5 times fast!">
               <AiFillApple size={20} />
             </li>
           </ul>
